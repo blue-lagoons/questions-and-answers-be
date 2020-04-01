@@ -1,14 +1,14 @@
-DROP DATABASE IF EXISTS questions_answers;
+DROP DATABASE IF EXISTS qa;
 
-CREATE DATABASE questions_answers;
+CREATE DATABASE qa;
 
-\c questions_answers;
+\c qa;
 
 CREATE TABLE questions (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY NOT NULL,
   product_id INT,
   body TEXT,
-  date_written TEXT,
+  date_written DATE,
   asker_name TEXT,
   asker_email TEXT,
   reported INT,
@@ -16,10 +16,10 @@ CREATE TABLE questions (
 );
 
 CREATE TABLE answers (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY NOT NULL,
   question_id INT,
   body TEXT,
-  date_written TEXT,
+  date_written DATE,
   answerer_name TEXT,
   answerer_email TEXT,
   reported INT,
@@ -27,7 +27,7 @@ CREATE TABLE answers (
 );
 
 CREATE TABLE answer_photos (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY NOT NULL,
   answers_id INT,
   url TEXT
 );
