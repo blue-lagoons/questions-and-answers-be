@@ -1,0 +1,24 @@
+{
+  "name": "questions-and-answers-be",
+  "version": "1.0.0",
+  "description": "Ecommerce Retail Portal (Tiger-Eye) - Back-End",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blue-lagoons/questions-and-answers-be.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blue-lagoons/questions-and-answers-be/issues"
+  },
+  "homepage": "https://github.com/blue-lagoons/questions-and-answers-be#readme",
+  "dependencies": {
+    "pg": "^8.0.0",
+    "faker": "4.1.0"
+  }
+}
