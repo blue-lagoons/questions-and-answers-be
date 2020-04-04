@@ -104,7 +104,6 @@ const urlList = ['https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?i
   'https://images.unsplash.com/photo-1517278322228-3fe7a86cf6f0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1567&q=80',
   'https://images.unsplash.com/photo-1562542096-218d8f9760bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=2057&q=80'];
 
-
 const t0 = performance.now();
 let db = mongoose.connection;
 
@@ -112,88 +111,73 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('*in hacker voice taking through his watch*: WE\'RE IN.');
 
-//   let QAschema = new mongoose.Schema({
-//     product_id: Number,
-//     body: String,
-//     date: String,
-//     asker_name: String,
-//     asker_email: String,
-//     reported: Number,
-//     helpful: Number,
-//     answers: [
-//         {
-//             answer_id: Number,
-//             body: String,
-//             date_written: String,
-//             answerer_name: String,
-//             answerer_email: String,
-//             helpfulness: Number,
-//             reported: Number,
-//             photos: [
-//                 String
-//             ]
-//         }]
-//   });
+  let QAschema = new mongoose.Schema({
+    id: Number,
+    product_id: Number,
+    body: String,
+    date_written: String,
+    asker_name: String,
+    asker_email: String,
+    reported: Number,
+    helpful: Number,
+    answers: Array
+  });
 
-//   let Question = mongoose.model('Question', QAschema);
+  let Question = mongoose.model('Question', QAschema);
+  let product_id = 1;
 
-//   for (let i = 0; i < 10; i++) {  //question loop
-//     let bodyQ = faker.lorem.sentence();
-//     let dateQ = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
-//     dateQ = dateQ.substring(1, 11)
-//     let nameQ = faker.internet.userName();
-//     let emailQ = faker.internet.email();
-//     let reportedQ = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of questions reported
-//     let helpfulQ = faker.random.number({min:0, max:33});
-//     let answersArr = [];
+  for (let i = 1; i <= 10; i++) {  //question loop
+    let id = i;
+    let body = faker.lorem.sentence();
+    let date = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
+    date = date.substring(1, 11)
+    let name = faker.internet.userName();
+    let email = faker.internet.email();
+    let reported = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of questions reported
+    let helpful = faker.random.number({min:0, max:33});
+    let answersArr = [];
 
-//     for (let j=0; j < 2; j++) {  //answer loop
-//         let bodyA = faker.lorem.sentence();
-//         let dateA = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
-//         dateA = dateA.substring(1, 11)
-//         let nameA = faker.internet.userName();
-//         let emailA = faker.internet.email();
-//         let reportedA = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of questions reported
-//         let helpfulA = faker.random.number({min:0, max:27});
-//         let photoArr = [];
+    let numberOfAnswers = faker.random.arrayElement([0, 1, 1, 1, 1, 1, 2, 2, 2, 3]);
+    for (let j=0; j < numberOfAnswers; j++) {  //answer loop
+        let answerObj = {};
+        answerObj.body = faker.lorem.sentence();
+        let date = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
+        answerObj.date_written = date.substring(1, 11)
+        answerObj.answerer_name = faker.internet.userName();
+        answerObj.answerer_email= faker.internet.email();
+        answerObj.reported = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of answers reported
+        answerObj.helpful = faker.random.number({min:0, max:27});
+        answerObj.photos = [];
 
-//         for (let k=0; k<1; k++) {  //answer photo loop
-//             let randomInt = faker.random.number({min:0, max:99});
-//             let url = urlList[randomInt];
+        let numberOfPhotos = faker.random.arrayElement([0, 0, 0, 0, 1, 1, 1, 2, 2, 3]);
+        for (let k=0; k < numberOfPhotos; k++) {  //answer photo loop
+            let randomInt = faker.random.number({min:0, max:99});
+            let url = urlList[randomInt];
 
-//             photoArr.push(url);
-//         }
-
-//         answersArr.push(AnswerObj);
-//     }
-
-//   }
-
-  let kittySchema = new mongoose.Schema({
-      name: String,
-      array: []
-  })
-
-  let Kitten = mongoose.model('Kitten', kittySchema);
-
-  for (let i = 1; i < 3; i++) {
-    let catName = faker.name.firstName();
-    let pushArr = [];
-
-    for (j =0; j < 2; j++){
-        let obj = {};
-        let age = faker.random.number();
-        obj.age = age;
-        pushArr.push(obj);
+            answerObj.photos.push(url);
+        }
+        answersArr.push(answerObj);
     }
 
-    pushArr = [[1], [2], [3]]
-    let fluffy = new Kitten({ name: catName, array: pushArr });
-
-    fluffy.save(function (err) {
-    if (err) return console.error(err);
+    let newQuestion = new Question({ 
+        id: id,
+        product_id: product_id,
+        body: body,
+        date_written: date,
+        asker_name: name,
+        asker_email: email,
+        reported: reported,
+        helpful: helpful,
+        answers: answersArr
     });
+
+    newQuestion.save(function (err) {
+      if (err) return console.error(err);
+    });
+
+    product_id++;
   }
+
 });
 
 
