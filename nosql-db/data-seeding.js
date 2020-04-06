@@ -126,7 +126,7 @@ db.once('open', function() {
   let Question = mongoose.model('Question', QAschema);
   let product_id = 1;
 
-  for (let i = 1; i <= 10; i++) {  //question loop
+  for (let i = 1; i <= 500000; i++) {  //question loop
     let id = i;
     let body = faker.lorem.sentence();
     let date = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
@@ -175,12 +175,13 @@ db.once('open', function() {
       if (err) return console.error(err);
     });
 
-    product_id++;
+    let moveToNextProduct = faker.random.arrayElement([0, 1]);
+    if (moveToNextProduct === 1) {
+        ++product_id;
+    };
   }
 
 });
-
-
 
 const t1 = performance.now();
 console.log('execution time (ms): ', t1-t0);
