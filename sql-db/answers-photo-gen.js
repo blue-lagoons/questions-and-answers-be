@@ -106,7 +106,7 @@ const urlList = ['https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?i
 const t0 = performance.now();
 let id = 3717893; //3717892 last answers-photo id from legacy data
 let answer_id = 12392947;
-const finalAnswer = 32397444;
+const finalAnswer = 25354616;
 
 while (answer_id <= finalAnswer) {
 
@@ -118,8 +118,8 @@ while (answer_id <= finalAnswer) {
     let randomInt = faker.random.number({min:0, max:99});
     let url = urlList[randomInt];
   
-    fs.appendFileSync('csv-files/generated-photos.csv',
-      `${id}, ${answer_id}, "${url}" \n`
+    fs.appendFileSync('csv-files/noSQL-generatedPhotos.csv',
+      `${id},${answer_id},"${url}"\n`
     );
     ++id;
   }
