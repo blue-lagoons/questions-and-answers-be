@@ -1,6 +1,7 @@
 const faker = require('faker');
-const fs = require('fs');
 const { performance } = require('perf_hooks');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/qa', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const urlList = ['https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80',
 'https://images.unsplash.com/photo-1511127088257-53ccfcc769fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
@@ -104,26 +105,83 @@ const urlList = ['https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?i
   'https://images.unsplash.com/photo-1562542096-218d8f9760bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=2057&q=80'];
 
 const t0 = performance.now();
-let id = 3717893; //3717892 last answers-photo id from legacy data
-let answer_id = 12392947;
-const finalAnswer = 25354616;
+let db = mongoose.connection;
 
-while (answer_id <= finalAnswer) {
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('*in hacker voice taking through his watch*: WE\'RE IN.');
 
-  let moveToNextAnswer= faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 1]); // 12.5% have answers
+  let QAschema = new mongoose.Schema({
+    id: Number,
+    product_id: Number,
+    body: String,
+    date_written: String,
+    asker_name: String,
+    asker_email: String,
+    reported: Number,
+    helpful: Number,
+    answers: Array
+  });
 
-  if (moveToNextAnswer === 0) {
-      ++answer_id;
-  } else {
-    let randomInt = faker.random.number({min:0, max:99});
-    let url = urlList[randomInt];
-  
-    fs.appendFileSync('csv-files/noSQL-generatedPhotos.csv',
-      `${id},${answer_id},"${url}"\n`
-    );
-    ++id;
+  let Question = mongoose.model('Question', QAschema);
+  let product_id = 1;
+
+  for (let i = 1; i <= 500000; i++) {  //question loop
+    let id = i;
+    let body = faker.lorem.sentence();
+    let date = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
+    date = date.substring(1, 11)
+    let name = faker.internet.userName();
+    let email = faker.internet.email();
+    let reported = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of questions reported
+    let helpful = faker.random.number({min:0, max:33});
+    let answersArr = [];
+
+    let numberOfAnswers = faker.random.arrayElement([0, 1, 1, 1, 1, 1, 2, 2, 2, 3]);
+    for (let j=0; j < numberOfAnswers; j++) {  //answer loop
+        let answerObj = {};
+        answerObj.body = faker.lorem.sentence();
+        let date = JSON.stringify(faker.date.between('2020-01-01', '2020-03-31'));
+        answerObj.date_written = date.substring(1, 11)
+        answerObj.answerer_name = faker.internet.userName();
+        answerObj.answerer_email= faker.internet.email();
+        answerObj.reported = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of answers reported
+        answerObj.helpful = faker.random.number({min:0, max:27});
+        answerObj.photos = [];
+
+        let numberOfPhotos = faker.random.arrayElement([0, 0, 0, 0, 1, 1, 1, 2, 2, 3]);
+        for (let k=0; k < numberOfPhotos; k++) {  //answer photo loop
+            let randomInt = faker.random.number({min:0, max:99});
+            let url = urlList[randomInt];
+
+            answerObj.photos.push(url);
+        }
+        answersArr.push(answerObj);
+    }
+
+    let newQuestion = new Question({ 
+        id: id,
+        product_id: product_id,
+        body: body,
+        date_written: date,
+        asker_name: name,
+        asker_email: email,
+        reported: reported,
+        helpful: helpful,
+        answers: answersArr
+    });
+
+    newQuestion.save(function (err) {
+      if (err) return console.error(err);
+    });
+
+    let moveToNextProduct = faker.random.arrayElement([0, 1]);
+    if (moveToNextProduct === 1) {
+        ++product_id;
+    };
   }
-};
+
+});
 
 const t1 = performance.now();
 console.log('execution time (ms): ', t1-t0);

@@ -5,7 +5,7 @@ const { performance } = require('perf_hooks');
 const t0 = performance.now();
 let id = 12392947;
 let question_id = 3521635;
-const finalQ = 13521634; //last generated quesion id
+const finalQ = 10000000; //last generated quesion id
 
 while (question_id <= finalQ) {
   let body = faker.lorem.sentence();
@@ -16,8 +16,8 @@ while (question_id <= finalQ) {
   let reported = faker.random.arrayElement([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);  //10% of questions reported
   let helpful = faker.random.number({min:0, max:27});
 
-  fs.appendFileSync('csv-files/generated-As.csv',  
-    `${id}, ${question_id}, "${body}", "${date}", "${name}", "${email}", ${reported}, ${helpful} \n`
+  fs.appendFileSync('csv-files/noSQL-generatedAs.csv',  
+    `${id},${question_id},"${body}","${date}","${name}","${email}",${reported},${helpful} \n`
   );
 
   let moveToNextQuestion= faker.random.number({min: 1, max:2});
