@@ -11,51 +11,48 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //get questions for product
 app.get('/qa/:product_id', (req, res) => {
-    console.log('hi');
-    console.log(req.params.product_id);
-    //call on specific query to grabbing all the questions relating to the product_ID
+    return db.getQuestions(req, res)
+      .catch(error => console.log(error));
 });
 
 //get answers for question
 app.get('/qa/:question_id/answers', (req, res) => {
-    console.log('hi');
     console.log(req.params.question_id);
-    //call on specific query to grabbing all the answers relating to the product_ID
+    return db.getAnswers(req, res)
+      .catch(error => console.log(error));
 });
 
 //add a question
 app.post('/qa/:product_id', (req, res) => {
-    console.log('hi');
-    console.log(req.params.product_id);
+    console.log('add a question');
 });
 
 //add an answer
 app.post('/qa/:question_id/answers', (req, res) => {
-    console.log('hi');
-    console.log(req.params.question_id);
+    console.log('add an answer');
 });
 
 //mark question helpful
 app.put('/qa/question/:question_id/helpful', (req, res) => {
-    console.log('hi');
+    console.log('mark Q helpful');
     console.log(req.params.question_id);
 });
 
 //report question
 app.put('/qa/question/:question_id/report', (req, res) => {
-    console.log('hi');
+    console.log('report Q');
     console.log(req.params.question_id);
 });
 
 //mark answer helpful
 app.put('/qa/answer/:answer_id/helpful', (req, res) => {
-    console.log('hi');
+    console.log('Mark A helpful');
     console.log(req.params.answer_id);
 });
 
 //report answer
 app.put('/qa/answer/:answer_id/report', (req, res) => {
-    console.log('hi');
+    console.log('report A');
     console.log(req.params.answer_id);
 });
 
