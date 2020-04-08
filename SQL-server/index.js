@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('../sql-db/queries'); 
+const db = require('./database/models'); 
 
 const app = express();
 const PORT = 3000;
@@ -12,13 +12,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 //get questions for product
 app.get('/qa/:product_id', (req, res) => {
     return db.getQuestions(req, res)
+      .then(results => res.send(results))
       .catch(error => console.log(error));
 });
 
 //get answers for question
 app.get('/qa/:question_id/answers', (req, res) => {
-    console.log(req.params.question_id);
     return db.getAnswers(req, res)
+      .then(results => res.send(results))
       .catch(error => console.log(error));
 });
 
