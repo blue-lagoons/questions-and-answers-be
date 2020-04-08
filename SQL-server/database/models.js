@@ -9,6 +9,11 @@ const pool = new Pool({
 
 const getQuestions = (req, res) => {
   let product_id = [req.params.product_id];
+  let returnObj = {
+    product_id: req.params.product_id,
+    results: [],
+  };
+
   return pool.query('SELECT * FROM questions WHERE product_id = $1 AND reported = 0', product_id)
     .then(results => {
       return results.rows;
@@ -17,41 +22,53 @@ const getQuestions = (req, res) => {
 };
 
 const getAnswers = (req, res) => {
-  let question_id = [req.params.question_id];
+  
   let returnObj = {
-    question: question_id,
-    page: 0, // Selects the page of results to return. Default 1.
-    count: 5, // Specifies how many results per page to return. Default 5.
+    question: req.params.question_id,
+    page: req.query.page || 0,
+    count: req.query.count || 5,
     results: [],
   };
+  let count = Number(returnObj.count);
+  let offset = Number(returnObj.page * count);
+  
 
-    return pool.query(`SELECT a.*, p.photo_id, p.url FROM answers a LEFT JOIN answer_photos p ON a.answer_id=p.p_answer_id WHERE a.a_question_id = $1 AND a.a_reported = 0`, question_id)
+    return pool.query(`SELECT a.*, p.photo_id, p.url FROM answers a LEFT JOIN answer_photos p ON a.answer_id=p.p_answer_id WHERE a.a_question_id = $1 AND a.a_reported = 0`, [req.params.question_id])
     .then(results => {
       let answers = results.rows
 
       let photoArr = [];
       for (let i = 0; i < answers.length; i++) {
         
-
         if (answers[i].url) {
-          photoArr
+          let photoObj ={
+            id: answers[i].photo_id,
+            url: answers[i].url
+          };
+
+          photoArr.push(photoObj);
+          
+          if (answers[i].answer_id === answers[i+1].answer_id) {
+            continue;
+          }
         }
-        
   
         let answerObj = {
-          answer_id: answers.answer_id,
-          body: answers.a_body,
-          date: answers.a_date,
-          answerer_name: answers.answerer_name,
-          helpfulness: answers.a_helpful,
-        }
+          answer_id: answers[i].answer_id,
+          body: answers[i].a_body,
+          date: answers[i].a_date,
+          answerer_name: answers[i].answerer_name,
+          helpfulness: answers[i].a_helpful,
+          photos: photoArr,
+        };
+
         returnObj.results.push(answerObj);
+        
+        photoArr = [];
       } 
-        
-        
-        console.log(answerObj);
-      
-      return answers;
+
+      returnObj.results = returnObj.results.slice(offset, count+offset);
+      return returnObj;
     })
     .catch(error => console.log(error));
 };
