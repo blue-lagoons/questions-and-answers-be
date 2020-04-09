@@ -11,14 +11,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //get questions for product
 app.get('/qa/:product_id', (req, res) => {
-    return db.getQuestions(req, res)
+    return db.getQuestions(req)
       .then(results => res.send(results))
       .catch(error => console.log(error));
 });
 
 //get answers for question
 app.get('/qa/:question_id/answers', (req, res) => {
-    return db.getAnswers(req, res)
+    return db.getAnswers(req)
       .then(results => res.send(results))
       .catch(error => console.log(error));
 });
@@ -26,11 +26,17 @@ app.get('/qa/:question_id/answers', (req, res) => {
 //add a question
 app.post('/qa/:product_id', (req, res) => {
     console.log('add a question');
+    return db.addQuestion(req)
+      .then(results => res.sendStatus(201))
+      .catch(error => console.log(error));
 });
 
 //add an answer
 app.post('/qa/:question_id/answers', (req, res) => {
     console.log('add an answer');
+    return db.addAnswer(req)
+      .then(results => res.sendStatus(201))
+      .catch(error => console.log(error));
 });
 
 //mark question helpful
