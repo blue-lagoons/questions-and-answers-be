@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "faker": "4.1.0",
     "mongoose": "^5.9.7",
+    "newrelic": "^6.5.0",
     "pg": "^8.0.0"
   },
   "devDependencies": {
