@@ -6,8 +6,7 @@ const pool = new Pool({
   password: 'postgres',
 });
 
-
-const getQuestions = (req, res) => {
+const getQuestions = (req) => {
   let product_id = [req.params.product_id];
   let returnObj = {
     product_id: req.params.product_id,
@@ -75,7 +74,7 @@ const getQuestions = (req, res) => {
     .catch(error => console.log(error));
 };
 
-const getAnswers = (req, res) => {
+const getAnswers = (req) => {
   let returnObj = {
     question: req.params.question_id,
     page: req.query.page || 0,
@@ -84,7 +83,6 @@ const getAnswers = (req, res) => {
   };
   let count = Number(returnObj.count);
   let offset = Number(returnObj.page * count);
-  
 
     return pool.query(`SELECT a.*, p.photo_id, p.url FROM answers a LEFT JOIN answer_photos p ON a.answer_id=p.p_answer_id 
       WHERE a.a_question_id = $1 AND a.a_reported = 0`, [req.params.question_id])
@@ -126,8 +124,75 @@ const getAnswers = (req, res) => {
       .catch(error => console.log(error));
 };
 
+const addQuestion = (req) => {
+  const date = new Date();
+  const values = [
+    Number(req.params.product_id),
+    req.body.body,
+    date,
+    req.body.name,
+    req.body.email,
+    0, //reported
+    0, //helpful
+  ];
+
+  return pool.query(`INSERT INTO questions (product_id, body, date_written, asker_name, asker_email, reported, helpful)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)`, values)
+    .then(results => {console.log(results)})
+    .catch(error => console.log(error));
+}
+
+const addAnswer = (req) => {
+  const date = new Date();
+  const values = [
+    Number(req.params.question_id),
+    req.body.body,
+    date,
+    req.body.name,
+    req.body.email,
+    0, //reported
+    0, //helpful
+  ];
+  const photosArr = req.body.photos;
+
+  return pool.query(`INSERT INTO answers (a_question_id, a_body, a_date, answerer_name, answerer_email, a_reported, a_helpful)
+    VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING answer_id`, values)
+    .then(results => {
+      const p_answer_id = results.rows[0].answer_id;
+      console.log(p_answer_id);
+      if (photosArr) {
+
+      }
+
+    })
+    .catch(error => console.log(error));
+  
+}
+
+const markQuesitonHelpful = (req) => {
+  
+}
+
+const reportQuestion = (req) => {
+  
+}
+
+const markAnswerHelpful = (req) => {
+  
+}
+
+const reportAnswer = (req) => {
+  
+}
+
 module.exports = {
     pool,
     getQuestions,
-    getAnswers
+    getAnswers,
+    addQuestion,
+    addAnswer,
+    markQuesitonHelpful,
+    reportQuestion,
+    markAnswerHelpful,
+    reportAnswer
 };
