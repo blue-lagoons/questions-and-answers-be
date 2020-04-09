@@ -159,11 +159,19 @@ const addAnswer = (req) => {
     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING answer_id`, values)
     .then(results => {
       const p_answer_id = results.rows[0].answer_id;
-      console.log(p_answer_id);
-      if (photosArr) {
 
+      if (photosArr.length !== 0) {
+        let photoInsertQuery = `INSERT INTO answer_photos (p_answer_id, url) VALUES `;
+
+        for (let i = 0; i < photosArr.length; i++) {
+          if (i === photosArr.length -1) {
+            photoInsertQuery += `('${p_answer_id}', '${photosArr[i]}')`;
+          } else {
+            photoInsertQuery += `('${p_answer_id}', '${photosArr[i]}'), `;
+          }
+        }
+        return pool.query(photoInsertQuery);
       }
-
     })
     .catch(error => console.log(error));
   
