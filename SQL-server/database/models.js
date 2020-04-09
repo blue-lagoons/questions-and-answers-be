@@ -174,7 +174,6 @@ const addAnswer = (req) => {
       }
     })
     .catch(error => console.log(error));
-  
 }
 
 const markQuesitonHelpful = (req) => {
