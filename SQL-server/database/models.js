@@ -138,7 +138,7 @@ const addQuestion = (req) => {
 
   return pool.query(`INSERT INTO questions (product_id, body, date_written, asker_name, asker_email, reported, helpful)
     VALUES ($1, $2, $3, $4, $5, $6, $7)`, values)
-    .then(results => {console.log(results)})
+    .then(results => {})
     .catch(error => console.log(error));
 }
 
@@ -178,19 +178,23 @@ const addAnswer = (req) => {
 }
 
 const markQuesitonHelpful = (req) => {
-  
+  return pool.query('UPDATE questions SET helpful = helpful + 1 WHERE question_id = $1', [req.params.question_id])
+    .catch(error => console.log(error));
 }
 
 const reportQuestion = (req) => {
-  
+  return pool.query('UPDATE questions SET reported = 1 WHERE question_id = $1', [req.params.question_id])
+  .catch(error => console.log(error));
 }
 
 const markAnswerHelpful = (req) => {
-  
+  return pool.query('UPDATE answers SET a_helpful = a_helpful + 1 WHERE answer_id = $1', [req.params.answer_id])
+    .catch(error => console.log(error));
 }
 
 const reportAnswer = (req) => {
-  
+  return pool.query('UPDATE answers SET a_reported = 1 WHERE answer_id = $1', [req.params.answer_id])
+    .catch(error => console.log(error));
 }
 
 module.exports = {

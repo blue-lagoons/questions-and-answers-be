@@ -9,58 +9,52 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-//get questions for product
 app.get('/qa/:product_id', (req, res) => {
     return db.getQuestions(req)
       .then(results => res.send(results))
       .catch(error => console.log(error));
 });
 
-//get answers for question
 app.get('/qa/:question_id/answers', (req, res) => {
     return db.getAnswers(req)
       .then(results => res.send(results))
       .catch(error => console.log(error));
 });
 
-//add a question
 app.post('/qa/:product_id', (req, res) => {
-    console.log('add a question');
     return db.addQuestion(req)
       .then(results => res.sendStatus(201))
       .catch(error => console.log(error));
 });
 
-//add an answer
 app.post('/qa/:question_id/answers', (req, res) => {
-    console.log('add an answer');
     return db.addAnswer(req)
       .then(results => res.sendStatus(201))
       .catch(error => console.log(error));
 });
 
-//mark question helpful
 app.put('/qa/question/:question_id/helpful', (req, res) => {
-    console.log('mark Q helpful');
-    console.log(req.params.question_id);
+    return db.markQuesitonHelpful(req)
+      .then(results => res.sendStatus(204))
+      .catch(error => console.log(error));
 });
 
-//report question
 app.put('/qa/question/:question_id/report', (req, res) => {
-    console.log('report Q');
-    console.log(req.params.question_id);
+    return db.reportQuestion(req)
+      .then(results => res.sendStatus(204))
+      .catch(error => console.log(error));;
 });
 
-//mark answer helpful
 app.put('/qa/answer/:answer_id/helpful', (req, res) => {
-    console.log('Mark A helpful');
-    console.log(req.params.answer_id);
+    return db.markAnswerHelpful(req)
+      .then(results => res.sendStatus(204))
+      .catch(error => console.log(error));;
 });
 
-//report answer
 app.put('/qa/answer/:answer_id/report', (req, res) => {
-    console.log('report A');
-    console.log(req.params.answer_id);
+    return db.reportAnswer(req)
+      .then(results => res.sendStatus(204))
+      .catch(error => console.log(error));;
 });
 
 
