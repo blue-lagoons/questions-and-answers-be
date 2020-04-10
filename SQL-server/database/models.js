@@ -18,6 +18,9 @@ const getQuestions = (req) => {
     WHERE q.product_id=$1 AND q.reported=0 AND a.a_reported = 0`, product_id)
     .then(results => {
       let questions = results.rows;
+      if (questions.length === 0) {
+        return;
+      }
       let count = Number(req.query.count) || 5;
       let offset = Number(req.query.page * count) || 0;
       let photoArr = [];
@@ -88,6 +91,9 @@ const getAnswers = (req) => {
       WHERE a.a_question_id = $1 AND a.a_reported = 0`, [req.params.question_id])
       .then(results => {
         let answers = results.rows
+        if (answers.length === 0) {
+          return;
+        }
 
         let photoArr = [];
         for (let i = 0; i < answers.length; i++) {
