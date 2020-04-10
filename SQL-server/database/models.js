@@ -1,9 +1,11 @@
 const Pool = require('pg').Pool;
+const password = require('./dbConfig');
+
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'qa',
-  password: 'postgres',
+  password: password.password,
 });
 
 const getQuestions = (req) => {
@@ -134,10 +136,10 @@ const addQuestion = (req) => {
   const date = new Date();
   const values = [
     Number(req.params.product_id),
-    req.body.body,
+    req.body.body || null,
     date,
-    req.body.name,
-    req.body.email,
+    req.body.name || null,
+    req.body.email || null,
     0, //reported
     0, //helpful
   ];
@@ -152,10 +154,10 @@ const addAnswer = (req) => {
   const date = new Date();
   const values = [
     Number(req.params.question_id),
-    req.body.body,
+    req.body.body || null,
     date,
-    req.body.name,
-    req.body.email,
+    req.body.name || null,
+    req.body.email || null,
     0, //reported
     0, //helpful
   ];
@@ -203,7 +205,6 @@ const reportAnswer = (req) => {
 }
 
 module.exports = {
-    pool,
     getQuestions,
     getAnswers,
     addQuestion,
