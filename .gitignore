@@ -21,6 +21,8 @@ yarn-error.log*
 #files
 .csv
 newrelic.js
+dbConfig.js
+newrelic_agent.log
 
 #directories
 csv-files/
