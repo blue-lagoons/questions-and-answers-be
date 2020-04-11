@@ -1,8 +1,7 @@
 const Pool = require('pg').Pool;
 const psqlInfo = require('./dbConfig');
-console.log(psqlInfo);
 
-const pool = new Pool(psqlInfo);
+const pool = new Pool(psqlInfo.psqlInfo);
 
 const getQuestions = (req) => {
   let product_id = [req.params.product_id];
