@@ -1,12 +1,8 @@
 const Pool = require('pg').Pool;
-const password = require('./dbConfig');
+const psqlInfo = require('./dbConfig');
+console.log(psqlInfo);
 
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'qa',
-  password: password.password,
-});
+const pool = new Pool(psqlInfo);
 
 const getQuestions = (req) => {
   let product_id = [req.params.product_id];
