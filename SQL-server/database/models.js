@@ -1,10 +1,7 @@
 const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'qa',
-  password: 'postgres',
-});
+const psqlInfo = require('./dbConfig');
+
+const pool = new Pool(psqlInfo.psqlInfo);
 
 const getQuestions = (req) => {
   let product_id = [req.params.product_id];
@@ -18,6 +15,9 @@ const getQuestions = (req) => {
     WHERE q.product_id=$1 AND q.reported=0 AND a.a_reported = 0`, product_id)
     .then(results => {
       let questions = results.rows;
+      if (questions.length === 0) {
+        return;
+      }
       let count = Number(req.query.count) || 5;
       let offset = Number(req.query.page * count) || 0;
       let photoArr = [];
@@ -88,6 +88,9 @@ const getAnswers = (req) => {
       WHERE a.a_question_id = $1 AND a.a_reported = 0`, [req.params.question_id])
       .then(results => {
         let answers = results.rows
+        if (answers.length === 0) {
+          return;
+        }
 
         let photoArr = [];
         for (let i = 0; i < answers.length; i++) {
@@ -128,10 +131,10 @@ const addQuestion = (req) => {
   const date = new Date();
   const values = [
     Number(req.params.product_id),
-    req.body.body,
+    req.body.body || null,
     date,
-    req.body.name,
-    req.body.email,
+    req.body.name || null,
+    req.body.email || null,
     0, //reported
     0, //helpful
   ];
@@ -146,10 +149,10 @@ const addAnswer = (req) => {
   const date = new Date();
   const values = [
     Number(req.params.question_id),
-    req.body.body,
+    req.body.body || null,
     date,
-    req.body.name,
-    req.body.email,
+    req.body.name || null,
+    req.body.email || null,
     0, //reported
     0, //helpful
   ];
@@ -197,7 +200,6 @@ const reportAnswer = (req) => {
 }
 
 module.exports = {
-    pool,
     getQuestions,
     getAnswers,
     addQuestion,

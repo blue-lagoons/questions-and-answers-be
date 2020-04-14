@@ -13,6 +13,7 @@
 
 # misc
 .DS_Store
+.log
 
 npm-debug.log*
 yarn-debug.log*
@@ -21,6 +22,8 @@ yarn-error.log*
 #files
 .csv
 newrelic.js
+dbConfig.js
+newrelic_agent.log
 
 #directories
 csv-files/
