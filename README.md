@@ -22,6 +22,7 @@ After the system was optimized locally, the backend was deployed to AWS. The dat
 
 ### Deployed
 
+![table](/images/table.png)
 
 ## Scaling Plan
 <ul>
