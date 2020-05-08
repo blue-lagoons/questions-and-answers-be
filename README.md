@@ -22,7 +22,29 @@ After the system was optimized locally, the backend was deployed to AWS. The dat
 
 ### Deployed
 
+Ran 2, 30 second tests with varying VUs while holding iteration loop count, sleep time, and duration constant.
+
+![res_time_30s](/images/response_time_30s.png)
+![RPS_VUs_30s](/images/RPS_vs_VUs_30s.png)
+
+Increased the test time to 5 minutes to determine the time effects.
+
+![res_time_5min](/images/response_time_5min.png)
+![RPS_VUs_5min](/images/RPS_vs_VUs_5min.png)
+
+The table below compares the averages between the 30 second and 5 minute test results.
+
 ![table](/images/table.png)
+
+<ul>
+<li> Summary </li>
+<ul> 
+<li> Longer K6 testing times lead to higher RPS and shorter http request duration (aka response time) </li>
+<li> More VUs correlated with higher RPS but longer response time  </li>
+<li> No errors throughout the entire testing </li>
+</ul>
+</ul>
+
 
 ## Scaling Plan
 <ul>
