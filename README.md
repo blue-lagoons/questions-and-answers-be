@@ -18,7 +18,14 @@ After the system was optimized locally, the backend was deployed to AWS. The dat
 
 ## Stress Test Results
 
+All tests were run utilizing K6. Each virtual user (VU) was simulating a GET request to read all questions for a random product. This GET questions request is the most time consumptive due to the total amount of data being transfered, which is why it was used for benchmarking. The main metrics being analyzed were total http response time (ms), error rate (%), and requests per second (RPS).
+
 ### Local 
+
+Ran 2, 5 minute tests with varying VUs while holding iteration loop count, sleep time, and duration constant. The averaged between the two tests are the displayed data.
+
+![res_time](/images/local_res_time.png)
+![RPS_VUs](/images/local_RPS.png)
 
 ### Deployed
 
@@ -46,7 +53,8 @@ The total VUs were increased, keeping all other test parameters constant, until 
 <li> Longer K6 testing times lead to higher RPS and shorter http request duration (aka response time) </li>
 <li> More VUs correlated with higher RPS but longer response time  </li>
 <li> No errors throughout testing </li>
-<li> The deployed backend could handle approximately 730 RPS, with an average http reponse time of 122 ms, and 0% error rate s</li>
+<li> THe local backend system was more efficient compared to the deployed system, with an average response time of approximately 60 ms at a similar 730 RPS </li>
+<li> The deployed backend could handle approximately 730 RPS, with an average http reponse time of 122 ms, and 0% error rate </li>
 </ul>
 </ul>
 
