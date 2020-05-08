@@ -36,12 +36,17 @@ The table below compares the averages between the 30 second and 5 minute test re
 
 ![table](/images/table.png)
 
+The total VUs were increased, keeping all other test parameters constant, until the max http response time surpassed the desired 2 second limit.
+
+![high_VUs](/images/deployed.png)
+
 <ul>
 <li> Summary </li>
 <ul> 
 <li> Longer K6 testing times lead to higher RPS and shorter http request duration (aka response time) </li>
 <li> More VUs correlated with higher RPS but longer response time  </li>
-<li> No errors throughout the entire testing </li>
+<li> No errors throughout testing </li>
+<li> The deployed backend could handle approximately 730 RPS, with an average http reponse time of 122 ms, and 0% error rate s</li>
 </ul>
 </ul>
 
